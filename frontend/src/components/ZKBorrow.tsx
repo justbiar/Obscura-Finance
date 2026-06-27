@@ -15,26 +15,26 @@ function getOrCreateSecret(address: string): string {
   return secret;
 }
 
-function calcCreditScore(balanceWei: bigint, nonce: number, collateralWei: bigint): number {
+export function calcCreditScore(balanceWei: bigint, nonce: number, collateralWei: bigint): number {
   const balanceMon = Number(formatEther(balanceWei));
   const collateralMon = Number(formatEther(collateralWei));
 
-  // Balance score (0-300): 0 MON = 0, 5+ MON = 300
-  const balanceScore = Math.min(Math.floor(balanceMon * 60), 300);
+  // Balance score (0-200): 10+ MON = 200 points
+  const balanceScore = Math.min(Math.floor(balanceMon * 20), 200);
 
-  // Activity score (0-200): each sent tx = 40 points, max 200
-  const activityScore = Math.min(nonce * 40, 200);
+  // Activity score (0-200): 20+ txs = 200 points
+  const activityScore = Math.min(nonce * 10, 200);
 
-  // Collateral score (0-300): deposited collateral, 1+ MON = 300
-  const collateralScore = Math.min(Math.floor(collateralMon * 300), 300);
+  // Collateral score (0-300): 6+ MON collateral = 300 points
+  const collateralScore = Math.min(Math.floor(collateralMon * 50), 300);
 
-  // Base score: everyone starts at 200
-  const base = 200;
+  // Base score: everyone starts at 300
+  const base = 300;
 
   return Math.min(base + balanceScore + activityScore + collateralScore, 1000);
 }
 
-function getScoreLabel(score: number): { label: string; color: string } {
+export function getScoreLabel(score: number): { label: string; color: string } {
   if (score >= 800) return { label: 'Excellent', color: 'text-green' };
   if (score >= 650) return { label: 'Good', color: 'text-accent' };
   if (score >= 500) return { label: 'Fair', color: 'text-accent-dim' };
@@ -45,12 +45,12 @@ export function ZKBorrow() {
   const { address, isConnected } = useAccount();
   const [amount, setAmount] = useState('');
   const [nonce, setNonce] = useState(0);
-  const [step, setStep] = useState<'score' | 'borrow'>('score');
+  const [isNonceLoaded, setIsNonceLoaded] = useState(false);
 
-  const { writeContract, data: hash, isPending, reset } = useWriteContract();
+  const { writeContract, data: hash, isPending } = useWriteContract();
   const { isLoading: isConfirming, isSuccess } = useWaitForTransactionReceipt({ hash });
 
-  const { data: balanceData } = useBalance({ address, chainId: monadTestnet.id });
+  const { data: balanceData, isLoading: isBalanceLoading } = useBalance({ address, chainId: monadTestnet.id });
 
   const { data } = useReadContracts({
     contracts: address ? [
@@ -69,14 +69,20 @@ export function ZKBorrow() {
   // Fetch nonce (transaction count)
   useEffect(() => {
     if (!address) return;
+    setIsNonceLoaded(false);
     fetch(monadTestnet.rpcUrls.default.http[0], {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ jsonrpc: '2.0', method: 'eth_getTransactionCount', params: [address, 'latest'], id: 1 }),
     })
       .then(r => r.json())
-      .then(d => setNonce(parseInt(d.result, 16)))
-      .catch(() => {});
+      .then(d => {
+        setNonce(parseInt(d.result, 16));
+        setIsNonceLoaded(true);
+      })
+      .catch(() => {
+        setIsNonceLoaded(true);
+      });
   }, [address, isSuccess]);
 
   const secret = useMemo(() => address ? getOrCreateSecret(address) : '', [address]);
@@ -87,6 +93,8 @@ export function ZKBorrow() {
   const scoreInfo = getScoreLabel(score);
   const meetsThreshold = score >= 750;
   const scorePercent = Math.min((score / 1000) * 100, 100);
+
+  const isScoreLoading = isBalanceLoading || !isNonceLoaded;
 
   const handleRegister = () => {
     if (!secret) return;
@@ -122,7 +130,7 @@ export function ZKBorrow() {
         <span className="w-1.5 h-1.5 bg-accent rounded-full animate-pulse ml-auto" />
       </div>
       <p className="text-text-dim text-xs mb-5">
-        Borrow at 100% collateral with zero-knowledge credit proof.
+        Borrow with up to 100% collateral based on your zero-knowledge credit proof.
       </p>
 
       {hasZK ? (
@@ -140,7 +148,15 @@ export function ZKBorrow() {
       ) : (
         <>
           {/* Credit Score Card */}
-          <div className="bg-surface-2 border border-border rounded-xl p-4 mb-4">
+          <div className="bg-surface-2 border border-border rounded-xl p-4 mb-4 relative overflow-hidden">
+            {isScoreLoading && (
+              <div className="absolute inset-0 bg-surface-2/80 backdrop-blur-sm z-10 flex items-center justify-center">
+                <div className="flex flex-col items-center gap-2">
+                  <span className="w-5 h-5 border-2 border-accent/30 border-t-accent rounded-full animate-spin" />
+                  <span className="text-text-dim text-[10px] uppercase tracking-widest animate-pulse">Calculating ZK Proof...</span>
+                </div>
+              </div>
+            )}
             <div className="flex items-center justify-between mb-3">
               <span className="text-text-dim text-xs uppercase tracking-wider">ZK Credit Score</span>
               <span className={`text-xs font-semibold ${scoreInfo.color}`}>{scoreInfo.label}</span>
@@ -201,7 +217,7 @@ export function ZKBorrow() {
             <>
               <div className="flex items-center gap-2 py-2 px-4 bg-green/[0.06] border border-green/20 rounded-xl mb-3">
                 <span className="w-1.5 h-1.5 bg-green rounded-full" />
-                <span className="text-green text-xs">Commitment verified. Ready to borrow at 100% collateral.</span>
+                <span className="text-green text-xs">Commitment verified. Ready to borrow dynamically!</span>
               </div>
               <div className="mb-4">
                 <label className="block text-text-dim text-xs font-medium mb-2 uppercase tracking-wider">Borrow Amount</label>
@@ -223,10 +239,13 @@ export function ZKBorrow() {
             </>
           )}
 
-          {isSuccess && (
+          {isSuccess && hash && (
             <div className="mt-3 flex items-center justify-center gap-2 py-2 bg-green/[0.08] border border-green/20 rounded-lg">
               <span className="w-1.5 h-1.5 bg-green rounded-full" />
-              <span className="text-green text-sm font-medium">Transaction confirmed</span>
+              <span className="text-green text-sm font-medium">Transaction confirmed.</span>
+              <a href={`https://testnet.monadexplorer.com/tx/${hash}`} target="_blank" rel="noreferrer" className="text-green text-sm font-semibold underline hover:text-green/80 transition-colors">
+                View on Explorer ↗
+              </a>
             </div>
           )}
         </>

@@ -1,25 +1,25 @@
 @import "tailwindcss";
 
-/* Pera Wallet Dark Mode Palette — adapted for Obscura Finance */
+/* Aave Pro Aesthetic — Dark Institutional Theme */
 @theme {
-  /* Backgrounds (from Pera dark: #17171B base) */
-  --color-obsidian: #17171B;
-  --color-surface: #1E1E24;
-  --color-surface-2: #27272A;
-  --color-surface-3: #3F3F46;
+  /* Backgrounds */
+  --color-obsidian: #0d0e12;
+  --color-surface: #161923;
+  --color-surface-2: #1e2230;
+  --color-surface-3: #2d3348;
 
-  /* Borders (from Pera gray800: #27272A) */
-  --color-border: #2E2E35;
-  --color-border-light: #3F3F46;
+  /* Borders */
+  --color-border: #262a36;
+  --color-border-light: #373e51;
 
-  /* Primary accent — Pera yellow-gold #FFED54 */
-  --color-accent: #FFED54;
-  --color-accent-bright: #FFF387;
-  --color-accent-dim: #C77700;
+  /* Primary accent — Obscura Blue */
+  --color-accent: #38bdf8;
+  --color-accent-bright: #7dd3fc;
+  --color-accent-dim: #0284c7;
 
-  /* Secondary accent — Pera link teal #1F8E9D */
-  --color-teal: #1F8E9D;
-  --color-teal-dim: #176E7A;
+  /* Secondary accent */
+  --color-teal: #2dd4bf;
+  --color-teal-dim: #0f766e;
 
   /* Semantic */
   --color-green: #34D399;
@@ -29,6 +29,41 @@
   --color-text: #FFFFFF;
   --color-text-secondary: #CACACC;
   --color-text-dim: #8F8F94;
+
+  /* Logo Animations */
+  --animate-slow-spin-hover: slow-spin 10s linear infinite;
+  --animate-aperture-blade-1: blade-1 3s ease-in-out infinite alternate;
+  --animate-aperture-blade-2: blade-2 3s ease-in-out infinite alternate;
+  --animate-aperture-blade-3: blade-3 3s ease-in-out infinite alternate;
+  --animate-aperture-blade-4: blade-4 3s ease-in-out infinite alternate;
+  --animate-aperture-blade-5: blade-5 3s ease-in-out infinite alternate;
+  --animate-aperture-blade-6: blade-6 3s ease-in-out infinite alternate;
+  --animate-eye-scan: eye-scan 4s ease-in-out infinite;
+  
+  @keyframes slow-spin {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
+  }
+
+  @keyframes blade-1 { 0%, 20% { transform: translate(0, 0); } 80%, 100% { transform: translate(-10px, -15px); } }
+  @keyframes blade-2 { 0%, 20% { transform: translate(0, 0); } 80%, 100% { transform: translate(10px, -15px); } }
+  @keyframes blade-3 { 0%, 20% { transform: translate(0, 0); } 80%, 100% { transform: translate(15px, 0); } }
+  @keyframes blade-4 { 0%, 20% { transform: translate(0, 0); } 80%, 100% { transform: translate(10px, 15px); } }
+  @keyframes blade-5 { 0%, 20% { transform: translate(0, 0); } 80%, 100% { transform: translate(-10px, 15px); } }
+  @keyframes blade-6 { 0%, 20% { transform: translate(0, 0); } 80%, 100% { transform: translate(-15px, 0); } }
+
+  @keyframes eye-scan {
+    0%, 10% { transform: translateY(-50%) rotate(-30deg) translateX(-10%); opacity: 0; }
+    30% { opacity: 1; }
+    50% { transform: translateY(-50%) rotate(30deg) translateX(10%); }
+    70% { opacity: 1; }
+    90%, 100% { transform: translateY(-50%) rotate(-30deg) translateX(-10%); opacity: 0; }
+  }
+
+  @keyframes camera-open {
+    0% { clip-path: circle(0% at 50% 40%); filter: brightness(2) blur(10px); }
+    100% { clip-path: circle(150% at 50% 50%); filter: brightness(1) blur(0px); }
+  }
 }
 
 @layer base {
@@ -43,10 +78,10 @@
 
 @layer utilities {
   .glow-accent {
-    box-shadow: 0 0 40px rgba(255, 237, 84, 0.12), 0 0 80px rgba(255, 237, 84, 0.04);
+    box-shadow: 0 0 40px rgba(56, 189, 248, 0.12), 0 0 80px rgba(56, 189, 248, 0.04);
   }
   .glow-accent-strong {
-    box-shadow: 0 0 20px rgba(255, 237, 84, 0.25), 0 0 60px rgba(255, 237, 84, 0.08);
+    box-shadow: 0 0 20px rgba(56, 189, 248, 0.25), 0 0 60px rgba(56, 189, 248, 0.08);
   }
   .glow-teal {
     box-shadow: 0 0 40px rgba(31, 142, 157, 0.15), 0 0 80px rgba(31, 142, 157, 0.05);

@@ -89,10 +89,13 @@ export function Repay() {
             </button>
           </div>
 
-          {isSuccess && (
+          {isSuccess && hash && (
             <div className="mt-3 flex items-center justify-center gap-2 py-2 bg-green/[0.08] border border-green/20 rounded-lg">
               <span className="w-1.5 h-1.5 bg-green rounded-full" />
-              <span className="text-green text-sm font-medium">Repayment confirmed</span>
+              <span className="text-green text-sm font-medium">Repayment confirmed.</span>
+              <a href={`https://testnet.monadexplorer.com/tx/${hash}`} target="_blank" rel="noreferrer" className="text-green text-sm font-semibold underline hover:text-green/80 transition-colors">
+                View on Explorer ↗
+              </a>
             </div>
           )}
         </>
