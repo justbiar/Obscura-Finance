@@ -25,7 +25,6 @@ export function UserPosition() {
 
   const position = data?.[0]?.result as [bigint, bigint, boolean, bigint] | undefined;
   const healthFactor = data?.[1]?.result as bigint | undefined;
-  const commitment = data?.[2]?.result as `0x${string}` | undefined;
 
   // Fetch nonce (transaction count)
   useEffect(() => {
@@ -49,7 +48,6 @@ export function UserPosition() {
   const collateral = position?.[0] ?? 0n;
   const debt = position?.[1] ?? 0n;
   const isZK = position?.[2];
-  const hasCommitment = commitment && commitment !== '0x0000000000000000000000000000000000000000000000000000000000000000';
 
   const balance = balanceData?.value ?? 0n;
   const isScoreLoading = isBalanceLoading || !isNonceLoaded;
