@@ -1,0 +1,27 @@
+# Dependencies
+node_modules/
+lib/forge-std/
+lib/openzeppelin-contracts/
+
+# Build
+out/
+cache/
+frontend/dist/
+circuits/noir/target/
+
+# Foundry
+broadcast/
+
+# Environment
+.env
+*.key
+
+# OS
+.DS_Store
+
+# IDE
+.vscode/
+.idea/
+
+# Claude
+.claude/

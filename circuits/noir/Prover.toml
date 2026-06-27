@@ -1,0 +1,22 @@
+# ============================================================================
+# Obscura Finance - Prover Girdileri (Örnek)
+# ============================================================================
+# Bu dosya, proof üretimi sırasında devreye verilecek değerleri içerir.
+# Front-end uygulaması bu dosyayı dinamik olarak oluşturur.
+#
+# Private (gizli) girdiler: Sadece prover bilir
+# Public girdiler: On-chain kontrat tarafından doğrulanır
+# ============================================================================
+
+# Private: Kullanıcının gerçek kredi skoru (ifşa edilmez)
+credit_score = "800"
+
+# Private: Kullanıcının gizli anahtarı (commitment için)
+user_secret = "12345"
+
+# Public: Sistemin minimum skor eşiği
+min_score = "750"
+
+# Public: user_secret'in Pedersen hash'i (on-chain'de kayıtlı)
+# Not: Bu değer, nargo execute çalıştırıldığında gerçek hash ile değiştirilmelidir
+secret_hash = "0x0000000000000000000000000000000000000000000000000000000000000000"

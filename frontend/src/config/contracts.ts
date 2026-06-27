@@ -1,0 +1,27 @@
+export const LENDING_ADDRESS = '0x8bbcC652D3b39BFD92007173ef01C4931AD0e396' as const;
+
+export const LENDING_ABI = [
+  { type: 'function', name: 'deposit', inputs: [], outputs: [], stateMutability: 'payable' },
+  { type: 'function', name: 'withdraw', inputs: [{ name: 'amount', type: 'uint256' }], outputs: [], stateMutability: 'nonpayable' },
+  { type: 'function', name: 'borrow', inputs: [{ name: 'amount', type: 'uint256' }], outputs: [], stateMutability: 'nonpayable' },
+  { type: 'function', name: 'borrowWithZKProof', inputs: [{ name: 'amount', type: 'uint256' }, { name: 'zkProof', type: 'bytes' }, { name: 'publicInputs', type: 'bytes32[]' }], outputs: [], stateMutability: 'nonpayable' },
+  { type: 'function', name: 'repay', inputs: [], outputs: [], stateMutability: 'payable' },
+  { type: 'function', name: 'registerCommitment', inputs: [{ name: '_commitment', type: 'bytes32' }], outputs: [], stateMutability: 'nonpayable' },
+  { type: 'function', name: 'collateral', inputs: [{ name: '', type: 'address' }], outputs: [{ name: '', type: 'uint256' }], stateMutability: 'view' },
+  { type: 'function', name: 'debt', inputs: [{ name: '', type: 'address' }], outputs: [{ name: '', type: 'uint256' }], stateMutability: 'view' },
+  { type: 'function', name: 'hasZKBorrow', inputs: [{ name: '', type: 'address' }], outputs: [{ name: '', type: 'bool' }], stateMutability: 'view' },
+  { type: 'function', name: 'commitments', inputs: [{ name: '', type: 'address' }], outputs: [{ name: '', type: 'bytes32' }], stateMutability: 'view' },
+  { type: 'function', name: 'totalDeposits', inputs: [], outputs: [{ name: '', type: 'uint256' }], stateMutability: 'view' },
+  { type: 'function', name: 'totalBorrows', inputs: [], outputs: [{ name: '', type: 'uint256' }], stateMutability: 'view' },
+  { type: 'function', name: 'getHealthFactor', inputs: [{ name: 'user', type: 'address' }], outputs: [{ name: 'healthFactor', type: 'uint256' }], stateMutability: 'view' },
+  { type: 'function', name: 'getMaxBorrow', inputs: [{ name: 'user', type: 'address' }], outputs: [{ name: 'maxBorrow', type: 'uint256' }], stateMutability: 'view' },
+  { type: 'function', name: 'getPoolInfo', inputs: [], outputs: [{ name: 'deposits', type: 'uint256' }, { name: 'borrows', type: 'uint256' }, { name: 'utilization', type: 'uint256' }], stateMutability: 'view' },
+  { type: 'function', name: 'getUserPosition', inputs: [{ name: 'user', type: 'address' }], outputs: [{ name: 'userCollateral', type: 'uint256' }, { name: 'userDebt', type: 'uint256' }, { name: 'isZKBorrower', type: 'bool' }, { name: 'currentRatio', type: 'uint256' }], stateMutability: 'view' },
+  { type: 'function', name: 'STANDARD_COLLATERAL_RATIO', inputs: [], outputs: [{ name: '', type: 'uint256' }], stateMutability: 'view' },
+  { type: 'function', name: 'ZK_COLLATERAL_RATIO', inputs: [], outputs: [{ name: '', type: 'uint256' }], stateMutability: 'view' },
+  { type: 'event', name: 'Deposited', inputs: [{ name: 'user', type: 'address', indexed: true }, { name: 'amount', type: 'uint256', indexed: false }] },
+  { type: 'event', name: 'Withdrawn', inputs: [{ name: 'user', type: 'address', indexed: true }, { name: 'amount', type: 'uint256', indexed: false }] },
+  { type: 'event', name: 'Borrowed', inputs: [{ name: 'user', type: 'address', indexed: true }, { name: 'amount', type: 'uint256', indexed: false }] },
+  { type: 'event', name: 'ZKBorrowed', inputs: [{ name: 'user', type: 'address', indexed: true }, { name: 'amount', type: 'uint256', indexed: false }, { name: 'collateralRatio', type: 'uint256', indexed: false }] },
+  { type: 'event', name: 'Repaid', inputs: [{ name: 'user', type: 'address', indexed: true }, { name: 'amount', type: 'uint256', indexed: false }] },
+] as const;

@@ -1,0 +1,7 @@
+[package]
+name = "obscura_credit_score"
+type = "bin"
+authors = ["Obscura Finance"]
+compiler_version = ">=0.30.0"
+
+[dependencies]
